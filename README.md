@@ -17,6 +17,7 @@ Network: AWS Security Groups are configured to allow inbound traffic on Port 80 
 3. CI/CD Pipeline
 The pipeline is triggered automatically on every push to the main branch.
 ======================================================================
+
 GitHub Actions builds the Docker images for both frontend and backend.
 
 Images are pushed to Docker Hub.
