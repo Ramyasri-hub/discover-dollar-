@@ -1,27 +1,39 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+ # MEAN Stack Application: Automated Deployment to AWS
+ The main aim of the task is  establishes a fully automated CI/CD pipeline using GitHub Actions to build, push to Docker Hub, and deploy the application with zero manual intervention.
+ 1. Local Configuration
+Clone the repository: git clone <your-repo-link>.
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+Ensure Docker and Docker Compose are installed on your machine.
 
-## Project setup
+Run the application locally using: docker compose up --build.
 
-### Node.js Server
+2. Infrastructure Setup
+Cloud Provider: AWS EC2 (Ubuntu 24.04 LTS).
 
-cd backend
+Web Server: Nginx is configured within the frontend container to serve static assets on Port 80.
 
-npm install
+Network: AWS Security Groups are configured to allow inbound traffic on Port 80 (HTTP) and Port 22 (SSH).
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
+3. CI/CD Pipeline
+The pipeline is triggered automatically on every push to the main branch.
+======================================================================
+GitHub Actions builds the Docker images for both frontend and backend.
 
-Run `node server.js`
+Images are pushed to Docker Hub.
 
-### Angular Client
+The pipeline connects to the EC2 instance via SSH, pulls the latest images, and restarts the containers using Docker Compose.
 
-cd frontend
+1. CI/CD Configuration and Execution
+Shows the automated GitHub Actions workflow successfully triggering and completing.
 
-npm install
+2. Docker Image Build and Push Process
+Logs showing the multi-stage Docker build and the successful push to the Docker Hub registry.
 
-Run `ng serve --port 8081`
+3. Application Deployment and Working UI
+The live application running on AWS (at 54.255.151.217) showing a functional "Tutorials List".
 
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
+4. Nginx Setup and Infrastructure Details
+Proof of the AWS Security Group configuration and the Nginx web server handling Port 80 traffic.
+   
 
-Navigate to `http://localhost:8081/`
+
