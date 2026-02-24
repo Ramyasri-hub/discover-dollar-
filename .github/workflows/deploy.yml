@@ -1,4 +1,4 @@
-name: CI-CD Docker Deployment
+name: CI-CD Docker Compose Deploy (Root)
 
 on:
   push:
@@ -6,41 +6,32 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout Code
+      # 1️⃣ Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Login to Docker Hub
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      # 2️⃣ Copy docker-compose.yml to VM (as root)
+      - name: Copy docker-compose to VM
+        uses: appleboy/scp-action@v0.1.7
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          host: ${{ secrets.VM_IP }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/root/app"
 
-      # 3️⃣ Build & Push Backend Image
-      - name: Build & Push Backend
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/discover-backend:latest ./backend
-          docker push ${{ secrets.DOCKER_USERNAME }}/discover-backend:latest
-
-      # 4️⃣ Build & Push Frontend Image
-      - name: Build & Push Frontend
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/discover-frontend:latest ./frontend
-          docker push ${{ secrets.DOCKER_USERNAME }}/discover-frontend:latest
-
-      # 5️⃣ Deploy on Ubuntu VM
-      - name: Deploy to VM
+      # 3️⃣ Run docker-compose on VM (as root)
+      - name: Deploy using Docker Compose
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VM_IP }}
-          username: ubuntu
+          username: root
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd discover-dollar-/crud-dd-task-mean-app
+            cd /root/app
             docker-compose pull
             docker-compose up -d
