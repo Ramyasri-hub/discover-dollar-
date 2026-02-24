@@ -1,4 +1,4 @@
-name: CI-CD Docker Compose Deploy (Root)
+name: CI-CD Docker Compose Deploy (Root, No SCP)
 
 on:
   push:
@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Copy docker-compose.yml to VM (as root)
-      - name: Copy docker-compose to VM
-        uses: appleboy/scp-action@v0.1.7
+      - name: Copy docker-compose via SSH
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VM_IP }}
           username: root
           key: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.yml"
-          target: "/root/app"
+          script: |
+            mkdir -p /root/app
+            cat > /root/app/docker-compose.yml << 'EOF'
+            $(cat docker-compose.yml)
+            EOF
 
-      # 3️⃣ Run docker-compose on VM (as root)
-      - name: Deploy using Docker Compose
+      - name: Run Docker Compose
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VM_IP }}
