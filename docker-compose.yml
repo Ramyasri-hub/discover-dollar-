@@ -8,14 +8,14 @@ services:
       - mongo_data:/data/db
 
   backend:
-    image: yourdockerhub/backend:latest
+    image: ramyasri11/backend:latest
     depends_on:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/appdb
 
   frontend:
-    image: yourdockerhub/frontend:latest
+    image: ramyasri11/frontend:latest
 
   nginx:
     image: nginx:latest
