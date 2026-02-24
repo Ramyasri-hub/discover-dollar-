@@ -8,6 +8,9 @@ RUN npm run build --configuration=production
 
 # Stage 2: Serve
 FROM nginx:alpine
-COPY --from=build /app/dist/your-app-name /usr/share/nginx/html
-# Note: replace 'your-app-name' with the folder name in /dist
+# This wildcard helps if you don't know the exact subfolder name
+COPY --from=build /app/dist/*/ /usr/share/nginx/html/
+# If the above fails, check if your build output is directly in /app/dist/
+# COPY --from=build /app/dist/ /usr/share/nginx/html/
+
 EXPOSE 80
