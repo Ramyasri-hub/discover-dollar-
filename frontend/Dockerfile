@@ -4,13 +4,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build --configuration=production
+RUN npm run build
 
-# Stage 2: Serve
+# Stage 2: Nginx (The Fix)
 FROM nginx:alpine
-# This wildcard helps if you don't know the exact subfolder name
-COPY --from=build /app/dist/*/ /usr/share/nginx/html/
-# If the above fails, check if your build output is directly in /app/dist/
-# COPY --from=build /app/dist/ /usr/share/nginx/html/
-
+# Using /* ensures we copy the contents of the subfolder, whatever it's named
+COPY --from=build /app/dist/* /usr/share/nginx/html/
 EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
