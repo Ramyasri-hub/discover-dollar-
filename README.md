@@ -37,4 +37,3 @@ The live application running on AWS (at 54.255.151.217) showing a functional "Tu
 Proof of the AWS Security Group configuration and the Nginx web server handling Port 80 traffic.
    
 
-
