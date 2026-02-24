@@ -42,7 +42,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: |
             docker-compose.yml
-            nginx/
+            nginx
           target: "/home/ubuntu/app"
 
       # 6️⃣ Deploy on VM using Docker Compose
