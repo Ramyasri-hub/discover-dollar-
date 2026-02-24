@@ -4,11 +4,14 @@ services:
   mongo:
     image: mongo:6
     container_name: mongo
+    restart: always
     volumes:
       - mongo_data:/data/db
 
   backend:
     image: ramyasri11/discover-backend:latest
+    container_name: backend
+    restart: always
     depends_on:
       - mongo
     environment:
@@ -16,13 +19,18 @@ services:
 
   frontend:
     image: ramyasri11/discover-frontend:latest
+    container_name: frontend
+    restart: always
 
   nginx:
     image: nginx:latest
+    container_name: nginx
+    restart: always
     ports:
       - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # Use the absolute path or ensure the relative path is correct on the VM
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - frontend
       - backend
