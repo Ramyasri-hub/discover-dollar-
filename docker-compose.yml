@@ -8,14 +8,14 @@ services:
       - mongo_data:/data/db
 
   backend:
-    image: ramyasri11/backend:latest
+    image: ramyasri11/discover-backend:latest
     depends_on:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/appdb
 
   frontend:
-    image: ramyasri11/frontend:latest
+    image: ramyasri11/discover-frontend:latest
 
   nginx:
     image: nginx:latest
